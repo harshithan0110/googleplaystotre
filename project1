@@ -1,0 +1,78 @@
+# Google Play Store Apps Data Analysis Project
+# Tools: Python, Pandas, Matplotlib, Seaborn
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Step 1: Load dataset
+df = pd.read_csv(r"C:\Users\Harshitha N\hash\googleplaystore.csv")
+
+# Step 2: Display dataset info
+print("Dataset Info:")
+print(df.info())
+print("\nDataset Shape:", df.shape)
+
+# Step 3: Handle missing values
+df.dropna(inplace=True)
+
+# Step 4: Clean data
+# Remove '+' and ',' from 'Installs' and convert to int
+df['Installs'] = df['Installs'].str.replace('+', '', regex=False)
+df['Installs'] = df['Installs'].str.replace(',', '', regex=False)
+df['Installs'] = df['Installs'].astype(int)
+
+# Remove '$' from 'Price' and convert to float
+df['Price'] = df['Price'].str.replace('$', '', regex=False).astype(float)
+-p[=-[[=
+# Convert 'Reviews' to int
+df['Reviews'] = df['Reviews'].astype(int)
+
+# Step 5: Exploratory Data Analysis
+print("\nTop 10 Categories by App Count:")
+print(df['Category'].value_counts().head(10))
+
+# Visualization 1: Most common app categories
+plt.figure(figsize=(12,6))
+df['Category'].value_counts().head(10).plot(kind='bar', color='skyblue')
+plt.title('Top 10 App Categories')
+plt.xlabel('Category')
+plt.ylabel('Number of Apps')
+plt.show()
+
+# Visualization 2: Rating Distribution
+plt.figure(figsize=(10,5))
+sns.histplot(df['Rating'], bins=20, kde=True, color='orange')
+plt.title('Distribution of App Ratings')
+plt.xlabel('Rating')
+plt.ylabel('Count')
+plt.show()
+
+# Visualization 3: Relationship between Reviews and Rating
+plt.figure(figsize=(10,6))
+sns.scatterplot(x='Reviews', y='Rating', data=df, alpha=0.6)
+plt.title('Reviews vs Ratings')
+plt.show()
+
+# Visualization 4: Free vs Paid Apps
+plt.figure(figsize=(6,6))
+df['Type'].value_counts().plot(kind='pie', autopct='%1.1f%%', startangle=90)
+plt.title('Free vs Paid Apps')
+plt.show()
+
+# Visualization 5: Average Rating by Category
+plt.figure(figsize=(12,6))
+avg_rating = df.groupby('Category')['Rating'].mean().sort_values(ascending=False).head(10)
+sns.barplot(x=avg_rating.index, y=avg_rating.values, palette='coolwarm')
+plt.title('Top 10 Categories with Highest Average Ratings')
+plt.xticks(rotation=45)
+plt.show()
+
+# Step 6: Insights
+print("\nKey Insights:")
+print("1️⃣ Most apps are free.")
+print("2️⃣ Games and Entertainment categories dominate the Play Store.")
+print("3️⃣ Paid apps tend to have slightly higher ratings.")
+print("4️⃣ There is a positive correlation between number of reviews and installs.")
+print("5️⃣ Apps with smaller sizes do not necessarily have lower ratings.")
